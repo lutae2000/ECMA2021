@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+
+      td {
+        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const data = [];
+      const rows = [];
+      let turn = "O";
+      const { body } = document;
+      const $table = document.createElement("table");
+      const $result = document.createElement("div");
+
+      const checkWinner = (target) => {
+        let rowIndex = target.parentNode.rowIndex; //몇번째 줄?
+        let cellIndex = target.cellIndex; //가로쪽의 몇번째 컬럼?
+        // rows.forEach((row, ri) => {
+        //   row.forEach((cell, ci) => {
+        //     if (cell === target) {
+        //       rowIndex = ri;
+        //       cellIndex = ci;
+        //     }
+        //   });
+        // });
+
+        let hasWinner = false;
+
+        if (
+          rows[rowIndex][0].textContent === turn &&
+          rows[rowIndex][1].textContent === turn &&
+          rows[rowIndex][2].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+
+        if (
+          rows[0][cellIndex].textContent === turn &&
+          rows[1][cellIndex].textContent === turn &&
+          rows[2][cellIndex].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        if (
+          rows[0][0].textContent === turn &&
+          rows[1][1].textContent === turn &&
+          rows[2][2].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+        if (
+          rows[0][2].textContent === turn &&
+          rows[1][1].textContent === turn &&
+          rows[2][0].textContent === turn
+        ) {
+          hasWinner = true;
+        }
+
+        return hasWinner;
+      };
+
+      const checkWinnerAndDraw = (target) => {
+        const hasWinner = checkWinner(target);
+
+        if (hasWinner) {
+          $result.textContent = `${turn} 승리`;
+        }
+
+        const drow = rows.flat().every((cell) => cell.textContent);
+        if (draw) {
+          $result.textContent = `무승부`;
+          return;
+        }
+        turn = turn === "X" ? "O" : "X";
+      };
+
+      const callback = (event) => {
+        if (event.target.textContent !== "") {
+          console.log("it's not empty");
+          return;
+        }
+        console.log("It's empty");
+        event.target.textContent = turn;
+        if (checkWinner(event.target)) {
+          $result.textContent = `${turn} 승리`;
+          $table.removeEventListener("click", callback);
+        }
+
+        //무승부 확인
+        let count = 0;
+        let rowIndex = event.target.parentNode.rowIndex;
+        let columnIndex = event.target.cellIndex;
+
+        rows.forEach((row) => {
+          row.forEach((cell) => {
+            if (cell.textContent) {
+              count += 1;
+            }
+          });
+        });
+
+        //rows.flat().every((td) => td.textContent) //배열을 1차원으로 변경 후 값이 모두 있는지 체크 후 있으면 true, 하나라도 없으면 false
+        //rows.flat().some((td) => td.textContent)  //배열을 1차원으로 변경 후 값이 하나라도 존재 하는지 체크 후 있으면 true, 하나라도 있으면 false
+
+        if (count === 9) {
+          $result.textContent = `무승부`;
+        }
+
+        //컴터가 클릭
+        if (turn === "X") {
+          const emptyCells = rows.flat().filter((v) => !v.textContent);
+          const randomCell =
+            emptyCells[Math.floor(Math.random() * emptyCells.length)];
+          randomCell.textContent = "X";
+        }
+
+        turn = turn === "O" ? "X" : "O";
+      };
+
+      for (let i = 0; i < 3; i++) {
+        data.push([]);
+      }
+
+      for (let i = 0; i < 3; i++) {
+        const $tr = document.createElement("tr");
+        const cells = [];
+        for (let j = 0; j < 3; j++) {
+          const $td = document.createElement("td");
+          cells.push($td);
+          $tr.appendChild($td);
+        }
+
+        rows.push(cells);
+        $table.addEventListener("click", callback);
+        $table.append($tr);
+      }
+      body.appendChild($table);
+      body.appendChild($result);
+    </script>
+  </body>
+</html>
