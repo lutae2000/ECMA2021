@@ -52,14 +52,16 @@
   <div id="wrapper"></div>
   <script>
     const $wrapper = document.querySelector("#wrapper");
-    const total = 12;
-    const colors = ["red", "orange", "yellow", "green", "white", "pink"];
-    let colorCopy = colors.concat(colors);
+    const total = parseInt(prompt("카드 갯수 짝수 입력"));
+    const colors = ["red", "orange", "yellow", "green", "white", "pink", "violet", "gray", "black", "cyan"];
+    let colorSlice = colors.slice(0, total / 2);
+    let colorCopy = colorSlice.concat(colorSlice);
     let shuffled = [];
     let clicked = [];
     let completed = [];
     let clickable = false;
-
+    let startTime;
+    let endTime;
 
     function shuffle() {
       // 피셔-예이츠 셔플
@@ -106,25 +108,26 @@
         completed.push(clicked[0]);
         completed.push(clicked[1]);
         clicked = [];
-        return;
 
         if (completed.length !== total) {
           return;
         }
+        endTime = new Date();
         if (completed.length === total) {
           setTimeout(() => {
-            alert("축하합니다");
+            alert(`축하합니다 ${(endTime - startTime)/1000} 초 걸렸습니다`);
             resetGame();
           }, 500);
           return;
         }
-
       }
+      clickable = false;
       //다른 카드이면 다시 덮기
       setTimeout(() => {
         clicked[0].classList.remove("flipped");
         clicked[1].classList.remove("flipped");
         clicked = [];
+        clickable = true;
       }, 1000);
     }
 
@@ -149,6 +152,7 @@
           card.classList.remove("flipped");
         });
         clickable = true;
+        startTime = new Date();
       }, 5000);
     }
     startGame();
@@ -156,7 +160,7 @@
     function resetGame() {
       $wrapper.innerHTML = "";
       colorCopy = colors.concat(colors);
-      shuffle = [];
+      shuffled = [];
       completed = [];
       startGame();
     }
