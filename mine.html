@@ -69,6 +69,7 @@
             }
             console.log(shuffle);
             const data = [];
+            debugger;
             for (let i = 0; i < row; i++) {
                 const rowData = [];
                 data.push(rowData);
@@ -77,8 +78,8 @@
                 }
             }
             for (let k = 0; k < shuffle.length; k++) {
-                const ver = Math.floor(shuffle[k] / cell); // 7번째 줄 
-                const hor = shuffle[k] % cell; // 1번째 칸 
+                const ver = Math.floor(shuffle[k] / cell); // ?번째 줄 
+                const hor = shuffle[k] % cell; // ?번째 칸 
                 data[ver][hor] = CODE.MINE;
             }
             return data;
