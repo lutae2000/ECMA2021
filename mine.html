@@ -60,12 +60,12 @@
 
         function plantMine() {
             const candidate = Array(row * cell).fill().map((arr, i) => {
-                return i;
+                return i; // 0 ~ 99까지 값 넣기
             });
             const shuffle = [];
             while (candidate.length > row * cell - mine) {
                 const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
-                shuffle.push(chosen);
+                shuffle.push(chosen); //지뢰 인덱스 넣기
             }
             console.log(shuffle);
             const data = [];
@@ -78,13 +78,35 @@
                 }
             }
             for (let k = 0; k < shuffle.length; k++) {
-                const ver = Math.floor(shuffle[k] / cell); // ?번째 줄 
-                const hor = shuffle[k] % cell; // ?번째 칸 
-                data[ver][hor] = CODE.MINE;
+                const rowIndex = Math.floor(shuffle[k] / cell); // ?번째 줄 
+                const columnIndex = shuffle[k] % cell; // ?번째 칸 
+                data[rowIndex][columnIndex] = CODE.MINE;
             }
             return data;
         }
 
+        function onRightClick(event) {
+            alert(1);
+            event.preventDefault();
+            const target = event.target;
+            const rowIndex = target.parentNode.rowIndex;
+            const cellIndex = target.cellIndex;
+            const cellData = data[rowIndex][cellIndex];
+
+            if (cellData === CODE.MINE) { //지뢰이면?
+                data[rowIndex][cellIndex] = CODE.QUESTION_MINE; //물음표 지뢰로
+                target.className = 'question';
+                target.textContent = '?'
+            } else if (cellData === CODE.QUESTION_MINE) { //물음표 지뢰면?
+                data[rowIndex][cellIndex] = CODE.FLAG_MINE; //깃발 지뢰로
+                target.className = 'flag';
+                target.textContent = '!'
+            } else if (cellData === CODE.FLAG_MINE) {
+                //data[rowIndex][cellIndex] = CODE.
+            }
+
+
+        }
 
         function drawTable() {
             data = plantMine();
@@ -98,6 +120,7 @@
                     $tr.append($td);
                 });
                 $tbody.append($tr);
+                $tbody.addEventListener("contextMenu", onRightClick);
             });
         }
 
