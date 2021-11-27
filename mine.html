@@ -69,7 +69,6 @@
             }
             console.log(shuffle);
             const data = [];
-            debugger;
             for (let i = 0; i < row; i++) {
                 const rowData = [];
                 data.push(rowData);
@@ -86,7 +85,6 @@
         }
 
         function onRightClick(event) {
-            alert(1);
             event.preventDefault();
             const target = event.target;
             const rowIndex = target.parentNode.rowIndex;
@@ -102,7 +100,12 @@
                 target.className = 'flag';
                 target.textContent = '!'
             } else if (cellData === CODE.FLAG_MINE) {
-                //data[rowIndex][cellIndex] = CODE.
+                data[rowIndex][cellIndex] = CODE.MINE;
+                target.className = 'normal';
+                tartget.textContent = '';
+            } else if (cellData === CODE.NORMAL) {
+                data[rowIndex][cellIndex] = CODE.QUESTION;
+                tartget.className = 'question';
             }
 
 
@@ -120,7 +123,7 @@
                     $tr.append($td);
                 });
                 $tbody.append($tr);
-                $tbody.addEventListener("contextMenu", onRightClick);
+                $tbody.addEventListener("contextmenu", onRightClick);
             });
         }
 
